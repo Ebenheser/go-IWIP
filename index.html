@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>go-IWIP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            width: 80px;
+            height: auto;
+            max-width: 100%;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, select, button {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+            input, select, button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="iwip.png" alt="RideConnect Logo" class="logo">
+            <h1>go-IWIP-</h1>
+            <h2>developer: eben_manansang</h2>
+        </header>
+
+        <section id="passenger-form">
+            <h2>Form Penumpang</h2>
+            <form id="ride-form">
+                <input type="text" id="pickup" name="pickup" placeholder="Lokasi Penjemputan" required>
+                <input type="text" id="dropoff" name="dropoff" placeholder="Lokasi Tujuan" required>
+                <select id="driver-select" name="driver-select" required>
+                    <option value="">Pilih Driver</option>
+                </select>
+                <button type="submit">Pesan Perjalanan</button>
+            </form>
+        </section>
+
+        <section id="driver-registration">
+            <h2>Pendaftaran Driver</h2>
+            <form id="driver-form">
+                <input type="text" id="driver-name" name="driver-name" placeholder="Nama" required>
+                <input type="tel" id="driver-whatsapp" name="driver-whatsapp" placeholder="Nomor WhatsApp" required>
+                <input type="text" id="driver-vehicle" name="driver-vehicle" placeholder="Jenis Kendaraan" required>
+                <button type="submit">Daftar sebagai Driver</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        // Simpan data driver
+        let drivers = [];
+
+        // Fungsi untuk mendaftarkan driver
+        document.getElementById('driver-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('Nama_asal -conto(Amat-Patani)').value;
+            const whatsapp = document.getElementById('driver-whatsapp').value;
+            const vehicle = document.getElementById('driver-vehicle').value;
+            
+            drivers.push({name, whatsapp, vehicle});
+            updateDriverSelect();
+            alert('Driver berhasil didaftarkan!');
+            this.reset();
+        });
+
+        // Fungsi untuk memperbarui pilihan driver
+        function updateDriverSelect() {
+            const select = document.getElementById('driver-select');
+            select.innerHTML = '<option value="">Pilih Driver</option>';
+            drivers.forEach((driver, index) => {
+                select.innerHTML += `<option value="${index}">${driver.name} - ${driver.vehicle}</option>`;
+            });
+        }
+
+        // Fungsi untuk menangani pemesanan perjalanan
+        document.getElementById('ride-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const pickup = document.getElementById('pickup').value;
+            const dropoff = document.getElementById('dropoff').value;
+            const driverIndex = document.getElementById('driver-select').value;
+            
+            if (driverIndex !== "") {
+                const driver = drivers[driverIndex];
+                const message = `Halo ${driver.name}, saya ingin memesan perjalanan dari ${pickup} ke ${dropoff}.`;
+                const whatsappLink = `https://wa.me/${driver.whatsapp}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappLink, '_blank');
+            } else {
+                alert('Silakan pilih driver terlebih dahulu.');
+            }
+        });
+    </script>
+</body>
+</html>
